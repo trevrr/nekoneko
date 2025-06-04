@@ -57,9 +57,9 @@ const MoodSelector: React.FC<MoodSelectorProps> = ({ timeOfDay, date, onSelect, 
           {([1, 2, 3, 4, 5] as MoodLevel[]).map((mood) => (
             <motion.button
               key={mood}
-              whileHover={{ scale: 1.05 }}
+              whileHover={{ scale: 1.15 }}
               whileTap={{ scale: 0.95 }}
-              className="flex flex-col items-center justify-center p-3 rounded-lg bg-gray-100 hover:bg-gray-200 transition-colors"
+              className="flex flex-col items-center justify-center p-3 rounded-lg transition-colors"
               onClick={() => handleMoodSelect(mood)}
             >
               <span className="text-6xl">{getMoodEmoji(mood)}</span>

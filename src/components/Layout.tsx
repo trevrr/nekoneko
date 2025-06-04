@@ -30,7 +30,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             onClick={handleLogoClick}
           >
             <Cat size={24} />
-            <h1 className="text-xl font-semibold">Neko-Neko - Track How Things Are Going</h1>
+            <h1 className="text-xl font-semibold">Niko-Niko - Track How Things Are Going</h1>
           </motion.div>
           <Link 
             to="/welcome" 

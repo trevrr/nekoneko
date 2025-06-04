@@ -2,14 +2,28 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Moon, Sun, Sunset, Lock, Database, Github } from 'lucide-react';
+import MoodSelector from './MoodSelector';
+import { useMood } from '../contexts/MoodContext';
+import { getCurrentTimeOfDay } from '../utils/dateUtils';
 
 const LandingPage: React.FC = () => {
   const navigate = useNavigate();
   const [skipLanding, setSkipLanding] = useState(false);
+  const [showMoodSelector, setShowMoodSelector] = useState(false);
+  const { saveMood, saveReflection } = useMood();
+  const currentTimeOfDay = getCurrentTimeOfDay();
 
   const handleGetStarted = () => {
     if (skipLanding) {
       localStorage.setItem('skipLanding', 'true');
+    }
+    setShowMoodSelector(true);
+  };
+
+  const handleMoodSelect = (mood: 1 | 2 | 3 | 4 | 5) => {
+    saveMood(mood, currentTimeOfDay);
+    if (currentTimeOfDay === 'evening') {
+      saveReflection(false);
     }
     navigate('/day');
   };
@@ -25,7 +39,7 @@ const LandingPage: React.FC = () => {
         >
           <h1 className="text-4xl font-bold text-gray-900 sm:text-5xl md:text-6xl">
             Track Your Daily Journey with Your Own
-            <span className="text-purple-600"> Neko-Neko</span>
+            <span className="text-purple-600"> Niko-Niko</span>
           </h1>
           <p className="mt-3 text-base text-gray-500 sm:mt-5 sm:text-lg">
             A private, secure way to track whatever you want to.
@@ -33,6 +47,21 @@ const LandingPage: React.FC = () => {
           <p className="mt-3 text-base text-gray-500 sm:mt-5 sm:text-lg">
             You might use this to track your daily mood, daily habits or just how things are going.
           </p>
+
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.2 }}
+            className="mt-8 flex flex-col items-center"
+          >
+            <button
+              onClick={handleGetStarted}
+              className="px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-purple-600 hover:bg-purple-700 transition-colors mb-4"
+            >
+              How are you getting on?
+            </button>
+          </motion.div>
+
           <p className="mt-3 text-base text-gray-500 sm:mt-5 sm:text-lg">
             At the end of each day you can perform a reflection or meditation if you want.
           </p>
@@ -119,7 +148,7 @@ const LandingPage: React.FC = () => {
           <h2 className="text-2xl font-bold text-gray-900 mb-4">Technical Details</h2>
           <div className="prose text-gray-600">
             <p className="mb-4">
-              Neko-Neko uses your browser's Local Storage to securely store your mood data and reflections. 
+              Niko-Niko uses your browser's Local Storage to securely store your mood data and reflections. 
               This means:
             </p>
             <ul className="list-disc pl-5 space-y-2">
@@ -137,12 +166,6 @@ const LandingPage: React.FC = () => {
           transition={{ delay: 0.8 }}
           className="mt-12 text-center"
         >
-          <button
-            onClick={handleGetStarted}
-            className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-purple-600 hover:bg-purple-700 transition-colors"
-          >
-            Get Started
-          </button>
           <div className="mt-4 flex items-center justify-center">
             <input
               type="checkbox"
@@ -157,6 +180,15 @@ const LandingPage: React.FC = () => {
           </div>
         </motion.div>
       </div>
+
+      {showMoodSelector && (
+        <MoodSelector
+          timeOfDay={currentTimeOfDay}
+          date={new Date()}
+          onSelect={handleMoodSelect}
+          onClose={() => setShowMoodSelector(false)}
+        />
+      )}
     </div>
   );
 };
